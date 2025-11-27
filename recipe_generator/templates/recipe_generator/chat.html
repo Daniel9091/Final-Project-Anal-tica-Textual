@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Recetas IA</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; background-color: #f4f4f4; }
+        h1 { text-align: center; color: #333; }
+        #chat-container { background-color: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        #ingredients-form { display: flex; gap: 10px; }
+        #ingredients-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background-color: #aaa; }
+        #result-container { margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 4px; white-space: pre-wrap; }
+        .status { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div id="chat-container">
+        <h1>Generador de Recetas IA 🍳</h1>
+        <p>Escribe una lista de ingredientes separados por comas y obtén una receta generada por inteligencia artificial.</p>
+
+        <form id="ingredients-form">
+            <input type="text" id="ingredients-input" placeholder="Ej: pollo, arroz, brócoli, salsa de soja" required>
+            <button type="submit" id="submit-button">Generar Receta</button>
+        </form>
+
+        <div id="result-container" style="display: none;">
+            <h3>Tu Receta:</h3>
+            <p id="recipe-output"></p>
+        </div>
+        <div id="status-container" class="status"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('ingredients-form');
+        const input = document.getElementById('ingredients-input');
+        const submitButton = document.getElementById('submit-button');
+        const resultContainer = document.getElementById('result-container');
+        const recipeOutput = document.getElementById('recipe-output');
+        const statusContainer = document.getElementById('status-container');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Evita que la página se recargue
+
+            const ingredientsText = input.value.trim();
+            if (!ingredientsText) return;
+
+            // Convierte el texto "a, b, c" en un array ["a", "b", "c"]
+            const ingredientsList = ingredientsText.split(',').map(item => item.trim());
+
+            // Deshabilitar el botón y mostrar estado
+            submitButton.disabled = true;
+            statusContainer.textContent = 'Generando receta, por favor espera... 🤖';
+            resultContainer.style.display = 'none';
+
+            try {
+                const response = await fetch('/generate/', { // Llama a nuestra API
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ingredients: ingredientsList })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error del servidor: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Mostrar el resultado
+                recipeOutput.textContent = data.recipe;
+                resultContainer.style.display = 'block';
+                statusContainer.textContent = '';
+
+            } catch (error) {
+                console.error('Error al generar la receta:', error);
+                statusContainer.textContent = 'Hubo un error al conectar con el servidor. Inténtalo de nuevo.';
+            } finally {
+                // Volver a habilitar el botón
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>

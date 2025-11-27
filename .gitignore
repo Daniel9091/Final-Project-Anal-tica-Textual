@@ -1,3 +1,11 @@
+# Entornos virtuales
+venv/
+
+# Archivos de modelo de Machine Learning (¡MUY IMPORTANTE!)
+*.safetensors
+*.bin
+
+# Otros archivos de Django y Python
 __pycache__/
 *.pyc
 env/
