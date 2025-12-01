@@ -8,7 +8,8 @@
         body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; background-color: #f4f4f4; }
         h1 { text-align: center; color: #333; }
         #chat-container { background-color: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        #ingredients-form { display: flex; gap: 10px; }
+        #recipe-form { display: flex; flex-direction: column; gap: 15px; }
+        #dish-name-input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
         #ingredients-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
         button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
         button:disabled { background-color: #aaa; }
@@ -20,11 +21,12 @@
 
     <div id="chat-container">
         <h1>Generador de Recetas IA 🍳</h1>
-        <p>Escribe una lista de ingredientes separados por comas y obtén una receta generada por inteligencia artificial.</p>
+        <p>Dale un nombre a tu plato y una lista de ingredientes (separados por comas) para obtener una receta generada por IA.</p>
 
-        <form id="ingredients-form">
+        <form id="recipe-form">
+            <input type="text" id="dish-name-input" placeholder="Nombre del plato. Ej: Estofado de la abuela" required>
             <input type="text" id="ingredients-input" placeholder="Ej: pollo, arroz, brócoli, salsa de soja" required>
-            <button type="submit" id="submit-button">Generar Receta</button>
+            <button type="submit" id="submit-button" style="align-self: flex-end;">Generar Receta</button>
         </form>
 
         <div id="result-container" style="display: none;">
@@ -35,21 +37,23 @@
     </div>
 
     <script>
-        const form = document.getElementById('ingredients-form');
+        const form = document.getElementById('recipe-form');
+        const dishNameInput = document.getElementById('dish-name-input');
         const input = document.getElementById('ingredients-input');
         const submitButton = document.getElementById('submit-button');
         const resultContainer = document.getElementById('result-container');
         const recipeOutput = document.getElementById('recipe-output');
         const statusContainer = document.getElementById('status-container');
 
-        form.addEventListener('submit', async (event) => {
+        form.addEventListener('submit', async(event) => {
             event.preventDefault(); // Evita que la página se recargue
 
+            const dishName = dishNameInput.value.trim();
             const ingredientsText = input.value.trim();
-            if (!ingredientsText) return;
+            if (!dishName || !ingredientsText) return;
 
             // Convierte el texto "a, b, c" en un array ["a", "b", "c"]
-            const ingredientsList = ingredientsText.split(',').map(item => item.trim());
+            const ingredientsList = ingredientsText.split(',').map(item => item.trim()).filter(item => item);
 
             // Deshabilitar el botón y mostrar estado
             submitButton.disabled = true;
@@ -57,12 +61,12 @@
             resultContainer.style.display = 'none';
 
             try {
-                const response = await fetch('/generate/', { // Llama a nuestra API
+                const response = await fetch('/generate/', { // Llama a nuestra API, la URL es correcta según tu urls.py
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ ingredients: ingredientsList })
+                    body: JSON.stringify({ dish_name: dishName, ingredients: ingredientsList })
                 });
 
                 if (!response.ok) {

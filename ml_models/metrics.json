@@ -1,0 +1,42 @@
+[
+    {
+        "epoch": 1,
+        "loss": 1.6208387822586396,
+        "perplexity": 5.057330537134996,
+        "epoch_seconds": 2951.6629316806793,
+        "learning_rate": 5e-05,
+        "batch_size": 8,
+        "model_saved_to_disk": true,
+        "early_stopping_triggered": false
+    },
+    {
+        "epoch": 2,
+        "loss": 1.3176773615117567,
+        "perplexity": 3.73473685210268,
+        "epoch_seconds": 2953.232707262039,
+        "learning_rate": 5e-05,
+        "batch_size": 8,
+        "model_saved_to_disk": true,
+        "early_stopping_triggered": false
+    },
+    {
+        "epoch": 3,
+        "loss": 1.2286719968564233,
+        "perplexity": 3.416689148202692,
+        "epoch_seconds": 2952.450080394745,
+        "learning_rate": 5e-05,
+        "batch_size": 8,
+        "model_saved_to_disk": true,
+        "early_stopping_triggered": false
+    },
+    {
+        "epoch": 4,
+        "loss": 1.171183567258964,
+        "perplexity": 3.2258083411490017,
+        "epoch_seconds": 2949.9838218688965,
+        "learning_rate": 5e-05,
+        "batch_size": 8,
+        "model_saved_to_disk": true,
+        "early_stopping_triggered": false
+    }
+]
