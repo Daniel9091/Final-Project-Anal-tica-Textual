@@ -41,7 +41,7 @@ def generate_recipe_api(request: HttpRequest) -> JsonResponse:
         # 4. Ejecutar el modelo con los parámetros optimizados de tu Colab.
         output = generator_pipeline(
             prompt,
-            max_new_tokens=350,
+            max_new_tokens=500,
             num_return_sequences=1,
             do_sample=True,
             temperature=0.4,
